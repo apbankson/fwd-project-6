@@ -68,9 +68,9 @@ let phraseLIs = phraseSection.querySelectorAll('li.letter');
 // PROBLEM: Right now, if a letter appears in the hidden phrase more than once, checkLetter() only reveals the first instance of that letter... why?
 
 const checkLetter = (chosenLetter) => {
-    for (let i = 0; i < daPhrase.length; i++) {
+    for (let i = 0; i < phraseLIs.length; i++) {
         let phraseLetterLI = phraseLIs[i];
-        phraseLetter = phraseLetterLI.textContent.toLowerCase();
+        let phraseLetter = phraseLetterLI.textContent.toLowerCase();
         if (chosenLetter === phraseLetter) {
             letterFound = phraseLetter;
             phraseLetterLI.classList.add('show');
