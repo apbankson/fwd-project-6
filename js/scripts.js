@@ -4,6 +4,7 @@ const phraseSection = document.getElementById('phrase');
 const startButton = document.querySelector('button.btn__reset');
 const overlay = document.getElementById('overlay');
 
+
 // Event listeners
     // Start button event listener
     // This transition is ugly a.f. -- should come back in and make this smoother with some CSS once the bones are in this.
@@ -36,8 +37,12 @@ const getRandomPhrase = arr => {
 };
     // Call the function and set the randomly chosen phrase to the variable "daPhrase"
 let daPhrase = getRandomPhrase(phrases);
+    // Turn the randomly selected phrase into an array of letters
+daPhrase = daPhrase.split('');
 
-    // Add the randomly selected phrase to the DOM
+
+
+    // Add the randomly selected phrase to the DOM -- the space thing here is still not ideal. Review at the end. 
 const addPhraseToDisplay = (_arr) => {
     const appendToUL = (letter) => {
         phraseSection.appendChild(letter);
@@ -48,15 +53,39 @@ const addPhraseToDisplay = (_arr) => {
         currentLetterLI.textContent = currentLetter;
         if (currentLetter != ' ') {
             currentLetterLI.className = 'letter';
+        } else {
+            currentLetterLI.innerHTML = '&nbsp;';
+            currentLetterLI.className = 'space';
         }
         appendToUL(currentLetterLI);
     }
 };
 
 addPhraseToDisplay(daPhrase);
+let phraseLIs = phraseSection.querySelectorAll('li.letter');
 
 // Function to check selected letter against the randomly selected hidden phrase
-const checkLetter = (_letter) => {
-    
+// PROBLEM: Right now, if a letter appears in the hidden phrase more than once, checkLetter() only reveals the first instance of that letter... why?
 
+const checkLetter = (chosenLetter) => {
+    for (let i = 0; i < daPhrase.length; i++) {
+        let phraseLetter = '';
+        let phraseLetterLI = phraseLIs[i];
+        phraseLetter = phraseLetterLI.textContent.toLowerCase();
+        if (chosenLetter === phraseLetter) {
+            letterFound = phraseLetter;
+            phraseLetterLI.classList.add('show');
+        }
+    }
 };
+
+// Keyboard event listener
+keyboard.addEventListener('click', (e) => {
+    if (e.target.tagName == 'BUTTON') {
+        let button = e.target;
+        let buttonText = button.textContent;
+        button.classList.add('chosen');
+        button.disabled = true;
+        checkLetter(buttonText);
+        }
+    });
