@@ -38,6 +38,25 @@ const getRandomPhrase = arr => {
 let daPhrase = getRandomPhrase(phrases);
 
     // Add the randomly selected phrase to the DOM
-const addPhraseToDisplay = (arr) => {
+const addPhraseToDisplay = (_arr) => {
+    const appendToUL = (letter) => {
+        phraseSection.appendChild(letter);
+    };
+    for (let i = 0; i < _arr.length; i++) {
+        let currentLetter = _arr[i];
+        let currentLetterLI = document.createElement('li');
+        currentLetterLI.textContent = currentLetter;
+        if (currentLetter != ' ') {
+            currentLetterLI.className = 'letter';
+        }
+        appendToUL(currentLetterLI);
+    }
+};
+
+addPhraseToDisplay(daPhrase);
+
+// Function to check selected letter against the randomly selected hidden phrase
+const checkLetter = (_letter) => {
     
+
 };
