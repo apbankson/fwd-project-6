@@ -3,6 +3,8 @@ const keyboard = document.getElementById('qwerty');
 const phraseSection = document.getElementById('phrase');
 const startButton = document.querySelector('button.btn__reset');
 const overlay = document.getElementById('overlay');
+const tries = document.querySelector('#scoreboard ol');
+const title = document.querySelector('.title');
 
 
 // Event listeners
@@ -37,7 +39,7 @@ const getRandomPhrase = arr => {
 };
     // Call the function and set the randomly chosen phrase to the variable "daPhrase"
 let daPhrase = getRandomPhrase(phrases);
-    // Turn the randomly selected phrase into an array of letters
+    // Turn the randomly selected phrase into an array of letters including spaces
 daPhrase = daPhrase.split('');
 
 
@@ -65,18 +67,41 @@ addPhraseToDisplay(daPhrase);
 let phraseLIs = phraseSection.querySelectorAll('li.letter');
 
 // Function to check selected letter against the randomly selected hidden phrase
-// PROBLEM: Right now, if a letter appears in the hidden phrase more than once, checkLetter() only reveals the first instance of that letter... why?
 
 const checkLetter = (chosenLetter) => {
+    let match = null;
     for (let i = 0; i < phraseLIs.length; i++) {
         let phraseLetterLI = phraseLIs[i];
         let phraseLetter = phraseLetterLI.textContent.toLowerCase();
         if (chosenLetter === phraseLetter) {
             letterFound = phraseLetter;
             phraseLetterLI.classList.add('show');
+            match = chosenLetter;
         }
     }
+    return match;
 };
+
+let numberOfShowingLetters = document.querySelectorAll('.show').length;
+
+const checkWin = () => {
+    let numberOfShowingLetters = document.querySelectorAll('.show').length;
+    if (phraseLIs.length == numberOfShowingLetters) {
+        overlay.style.display = '';
+        overlay.className = 'win';
+        title.textContent = 'YOU WIN!'
+        startButton.textContent = 'Restart game';
+    }
+}
+
+const checkLose = () => {
+    if (missed >= 5) {
+        overlay.style.display = '';
+        overlay.className = 'lose';
+        title.textContent = 'YOU LOSE!';
+        startButton.textContent = 'Restart game';
+    }
+}
 
 // Keyboard event listener
 keyboard.addEventListener('click', (e) => {
@@ -85,6 +110,13 @@ keyboard.addEventListener('click', (e) => {
         let buttonText = button.textContent;
         button.classList.add('chosen');
         button.disabled = true;
-        checkLetter(buttonText);
+        let didItMatch = checkLetter(buttonText);
+        if (didItMatch == null) {
+            missed += 1; 
+            tries.removeChild(tries.children[0]);
+        }
+        // Win and Loss conditions -- checking fires on each click event
+        checkWin();
+        checkLose();
         }
     });
