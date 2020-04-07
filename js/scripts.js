@@ -69,7 +69,6 @@ let phraseLIs = phraseSection.querySelectorAll('li.letter');
 
 const checkLetter = (chosenLetter) => {
     for (let i = 0; i < daPhrase.length; i++) {
-        let phraseLetter = '';
         let phraseLetterLI = phraseLIs[i];
         phraseLetter = phraseLetterLI.textContent.toLowerCase();
         if (chosenLetter === phraseLetter) {
