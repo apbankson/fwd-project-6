@@ -53,6 +53,7 @@ button {
   -webkit-transition: var(--transition);
   -o-transition: var(--transition);
   transition: var(--transition);
+  cursor: pointer;
 }
 
 .main-container {
