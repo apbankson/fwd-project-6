@@ -1,8 +1,10 @@
 // DOM references
 const keyboard = document.getElementById('qwerty');
+const keyboardKeys = document.querySelectorAll('div.keyrow button')
 const phraseSection = document.getElementById('phrase');
-const startButton = document.querySelector('button.btn__reset');
+const theButton = document.querySelector('button.btn__reset');
 const overlay = document.getElementById('overlay');
+const overlayOpacity = overlay.style.opacity;
 const tries = document.querySelector('#scoreboard ol');
 const title = document.querySelector('.title');
 
@@ -10,17 +12,20 @@ const title = document.querySelector('.title');
 // Event listeners
     // Start button event listener
     // This transition is ugly a.f. -- should come back in and make this smoother with some CSS once the bones are in this.
-startButton.addEventListener('click', () => {
-    overlay.style.display = 'none';
+
+theButton.addEventListener('click', () => {
+    overlay.style.opacity = '0';
+    setTimeout(function() {
+        overlay.style.display = 'none';
+    }, 500);
 });
 
 // State variables
 let missed = 0;
-let keepGoing = true;
 
 // PHRASE STUFF
     // Phrase array
-let phrases = [
+let thePhrases = [
     "TRACK THE PAST",
     "ORDER THE PRESENT",
     "DESIGN THE FUTURE",
@@ -37,14 +42,8 @@ const getRandomPhrase = arr => {
     let phraseSelector = getRandomInt(phraseArrLength);
     return arr[phraseSelector];
 };
-    // Call the function and set the randomly chosen phrase to the variable "daPhrase"
-let daPhrase = getRandomPhrase(phrases);
-    // Turn the randomly selected phrase into an array of letters including spaces
-daPhrase = daPhrase.split('');
 
-
-
-    // Add the randomly selected phrase to the DOM -- the space thing here is still not ideal. Review at the end. 
+    // Function to add the randomly selected phrase to the DOM. 
 const addPhraseToDisplay = (_arr) => {
     const appendToUL = (letter) => {
         phraseSection.appendChild(letter);
@@ -63,7 +62,14 @@ const addPhraseToDisplay = (_arr) => {
     }
 };
 
-addPhraseToDisplay(daPhrase);
+    // Function to combine getRandomPhrase and addPhraseToDisplay -- picks a random phrase from the array of phrases passed in and then appends to the DOM
+const selectAndAppendPhrase = (phrases) => {
+    let daPhrase = getRandomPhrase(phrases).split('');
+    addPhraseToDisplay(daPhrase);
+}
+
+selectAndAppendPhrase(thePhrases);
+
 let phraseLIs = phraseSection.querySelectorAll('li.letter');
 
 // Function to check selected letter against the randomly selected hidden phrase
@@ -88,18 +94,24 @@ const checkWin = () => {
     let numberOfShowingLetters = document.querySelectorAll('.show').length;
     if (phraseLIs.length == numberOfShowingLetters) {
         overlay.style.display = '';
+        setTimeout(function() {
+            overlay.style.opacity = 1;
+        }, 200);
         overlay.className = 'win';
         title.textContent = 'YOU WIN!'
-        startButton.textContent = 'Restart game';
+        theButton.textContent = 'Restart game';
     }
 }
 
 const checkLose = () => {
     if (missed >= 5) {
         overlay.style.display = '';
+        setTimeout(function() {
+            overlay.style.opacity = 1;
+        }, 200);
         overlay.className = 'lose';
         title.textContent = 'YOU LOSE!';
-        startButton.textContent = 'Restart game';
+        theButton.textContent = 'Restart game';
     }
 }
 
@@ -120,3 +132,18 @@ keyboard.addEventListener('click', (e) => {
         checkLose();
         }
     });
+
+theButton.addEventListener('click', () => {
+    if (theButton.textContent == 'Restart game') {
+        console.log('well at least this is firing');
+        for (let i = 0; i < keyboardKeys.length; i++) {
+            keyboardKeys[i].className = '';
+        } 
+        missed = 0; 
+
+        // Insert code here to remove the lis that contain the old phrase -- also, need to fix the way that the lis are getting appended
+        // to the DOM because they are not being added as children of the ul but just of the div. 
+
+        selectAndAppendPhrase(thePhrases);
+    }
+});

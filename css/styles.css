@@ -96,6 +96,7 @@ button {
 .show {
   color: #000;
   background-color: #76CE82;
+  transition: background-color .75s, color .75s;
 }
 
 /* Keyboard */
@@ -133,6 +134,7 @@ button {
   left: 0;
   right: 0;
   border-radius: 5px;
+  transition: opacity .5s ease-in, height .5s ease 10s;
 }
 
 .title {
