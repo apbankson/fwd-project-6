@@ -143,6 +143,7 @@ theButton.addEventListener('click', () => {
 
         // Insert code here to remove the lis that contain the old phrase -- also, need to fix the way that the lis are getting appended
         // to the DOM because they are not being added as children of the ul but just of the div. 
+        // Also need to add the lives back
 
         selectAndAppendPhrase(thePhrases);
     }
