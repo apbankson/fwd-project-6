@@ -1,12 +1,14 @@
 // DOM references
 const keyboard = document.getElementById('qwerty');
 const keyboardKeys = document.querySelectorAll('div.keyrow button')
-const phraseSection = document.getElementById('phrase');
+const phraseSection = document.querySelector('#phrase ul');
 const theButton = document.querySelector('button.btn__reset');
 const overlay = document.getElementById('overlay');
 const overlayOpacity = overlay.style.opacity;
 const tries = document.querySelector('#scoreboard ol');
 const title = document.querySelector('.title');
+const scoreboard = document.querySelector('#scoreboard ol');
+const hearts = document.querySelectorAll('#scoreboard li');
 
 
 // Event listeners
@@ -70,14 +72,21 @@ const selectAndAppendPhrase = (phrases) => {
 
 selectAndAppendPhrase(thePhrases);
 
-let phraseLIs = phraseSection.querySelectorAll('li.letter');
+let phraseLIs = document.querySelectorAll('#phrase li');
+let phraseLetterLIs = phraseSection.querySelectorAll('li.letter');
 
+
+const setPhraseInfo = () => {
+    phraseLIs = document.querySelectorAll('#phrase li');
+    phraseLetterLIs = phraseSection.querySelectorAll('li.letter');
+}
+setPhraseInfo();
 // Function to check selected letter against the randomly selected hidden phrase
 
 const checkLetter = (chosenLetter) => {
     let match = null;
-    for (let i = 0; i < phraseLIs.length; i++) {
-        let phraseLetterLI = phraseLIs[i];
+    for (let i = 0; i < phraseLetterLIs.length; i++) {
+        let phraseLetterLI = phraseLetterLIs[i];
         let phraseLetter = phraseLetterLI.textContent.toLowerCase();
         if (chosenLetter === phraseLetter) {
             letterFound = phraseLetter;
@@ -92,7 +101,7 @@ let numberOfShowingLetters = document.querySelectorAll('.show').length;
 
 const checkWin = () => {
     let numberOfShowingLetters = document.querySelectorAll('.show').length;
-    if (phraseLIs.length == numberOfShowingLetters) {
+    if (phraseLetterLIs.length == numberOfShowingLetters) {
         overlay.style.display = '';
         setTimeout(function() {
             overlay.style.opacity = 1;
@@ -135,16 +144,22 @@ keyboard.addEventListener('click', (e) => {
 
 theButton.addEventListener('click', () => {
     if (theButton.textContent == 'Restart game') {
-        console.log('well at least this is firing');
+        missed = 0;
         for (let i = 0; i < keyboardKeys.length; i++) {
             keyboardKeys[i].className = '';
+            keyboardKeys[i].disabled = false;
         } 
-        missed = 0; 
-
-        // Insert code here to remove the lis that contain the old phrase -- also, need to fix the way that the lis are getting appended
-        // to the DOM because they are not being added as children of the ul but just of the div. 
-        // Also need to add the lives back
-
+        // Remove old phrase
+        while (phraseSection.firstElementChild != null) {
+            phraseSection.removeChild(phraseSection.firstElementChild);
+        }
+        // Select and append new random phrase
         selectAndAppendPhrase(thePhrases);
+        // Add the lives back
+        for (i = 0; i < 5; i++){
+            let heart = hearts[i];
+            scoreboard.appendChild(heart);
+        }
+        setPhraseInfo();
     }
 });
